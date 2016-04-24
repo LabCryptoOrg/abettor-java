@@ -37,36 +37,15 @@ public class ConfigManager {
   }
   public int getValueAsInt(String section, String param)
       throws ConfigurationException {
-    if (!sectionParamValueMap.containsKey(section)) {
-      throw new ConfigurationException("Section '" + section + "' can't be found.");
-    }
-    Map<String, String> paramValueMap = sectionParamValueMap.get(section);
-    if (!paramValueMap.containsKey(param)) {
-      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
-    }
-    return Integer.parseInt(paramValueMap.get(param));
+    return Integer.parseInt(getValueAsString(section, param));
   }
   public long getValueAsLong(String section, String param)
       throws ConfigurationException {
-    if (!sectionParamValueMap.containsKey(section)) {
-      throw new ConfigurationException("Section '" + section + "' can't be found.");
-    }
-    Map<String, String> paramValueMap = sectionParamValueMap.get(section);
-    if (!paramValueMap.containsKey(param)) {
-      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
-    }
-    return Long.parseLong(paramValueMap.get(param));
+    return Long.parseLong(getValueAsString(section, param));
   }
   public boolean getValueAsBoolean(String section, String param)
       throws ConfigurationException {
-    if (!sectionParamValueMap.containsKey(section)) {
-      throw new ConfigurationException("Section '" + section + "' can't be found.");
-    }
-    Map<String, String> paramValueMap = sectionParamValueMap.get(section);
-    if (!paramValueMap.containsKey(param)) {
-      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
-    }
-    return Boolean.parseBoolean(paramValueMap.get(param));
+    return Boolean.parseBoolean(getValueAsString(section, param));
   }
   public List<String> getSectionLines(String section)
       throws ConfigurationException {

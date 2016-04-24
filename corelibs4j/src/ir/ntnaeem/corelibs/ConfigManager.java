@@ -2,15 +2,12 @@ package ir.ntnaeem.corelibs;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigManager {
   private List<String> sections = new ArrayList<>();
-  private Map<String, List<String>> sectionLines = new HashMap<>();
-  private Map<String, Map<String, String>> sectionParamValueMap = new HashMap<>();
+  private Map<String, List<String>> sectionLines = new Hashtable<>();
+  private Map<String, Map<String, String>> sectionParamValueMap = new Hashtable<>();
   private BufferedReader reader;
   public ConfigManager(String filePath) {
   }
@@ -85,37 +82,42 @@ public class ConfigManager {
       throws SyntaxErrorConfigFile, IOException {
     List<String> lines = new ArrayList<>();
     String line;
+    String lastSectionName = null;
     while ((line = reader.readLine()) != null) {
       line = line.trim();
       if (line.contains("[")) {
-        if(sections.size() != 0){
-          sectionLines.put(sections.get(sections.size() - 1) , lines);
-          lines = new ArrayList<>();
+        if(lastSectionName != null){
+          sectionLines.put(lastSectionName , lines);
+          lines.clear();
         }
-        sections.add(line.replace("[","").replace("]",""));
+        lastSectionName = line.replace("[","").replace("]","").trim();
+        sections.add(lastSectionName);
       } else {
-        if(sections.size() == 0){
+        if(lastSectionName == null){
           throw new SyntaxErrorConfigFile("A parameter was found that it has no section.");
-        }else {
-          if(line.length() != 0 &&
-             line.charAt(0) != '#') {
+        } else {
+          if(line.length() != 0 && !line.startsWith("#")) {
             lines.add(line);
           }
         }
       }
     }
-    if(sections.size() != 0){
-      sectionLines.put(sections.get(sections.size() - 1) , lines);
+    if(lastSectionName != null){
+      sectionLines.put(lastSectionName , lines);
     }
     for(String section : sections) {
       lines = sectionLines.get(section);
       for (String line2 : lines) {
         String[] split = line2.split("[:=]");
         String param;
-        String value = "";
+        String value;
         param = split[0].trim();
         if (split.length == 2) {
           value = split[1].trim();
+          if (!sectionParamValueMap.containsKey(section)) {
+            sectionParamValueMap.put(section, new Hashtable<String, String>());
+          }
+          Map<String, String> paramValueMap = sectionParamValueMap.get(section);
           paramValueMap.put(param, value);
         }
       }

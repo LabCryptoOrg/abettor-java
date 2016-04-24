@@ -16,61 +16,67 @@ public class ConfigManager {
   }
   public boolean hasParameter(String section, String param) {
     if (!sectionParamValueMap.containsKey(section)) {
-      // throw new RuntimeException("Section '" + section + "' can't be found.");
       return false;
     }
     Map<String, String> paramValueMap = sectionParamValueMap.get(section);
     if (!paramValueMap.containsKey(param)) {
-      // throw new RuntimeException("Parameter '" + section + "." + param + "' can't be found.");
       return false;
     }
     return true;
   }
-  public String getValueAsString(String section, String param) {
+  public String getValueAsString(String section, String param)
+      throws ConfigurationException {
     if (!sectionParamValueMap.containsKey(section)) {
-      throw new RuntimeException("Section '" + section + "' can't be found.");
+      throw new ConfigurationException("Section '" + section + "' can't be found.");
     }
     Map<String, String> paramValueMap = sectionParamValueMap.get(section);
     if (!paramValueMap.containsKey(param)) {
-      throw new RuntimeException("Parameter '" + section + "." + param + "' can't be found.");
+      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
     }
     return paramValueMap.get(param);
   }
-  public int getValueAsInt(String section, String param) {
+  public int getValueAsInt(String section, String param)
+      throws ConfigurationException {
     if (!sectionParamValueMap.containsKey(section)) {
-      throw new RuntimeException("Section '" + section + "' can't be found.");
+      throw new ConfigurationException("Section '" + section + "' can't be found.");
     }
     Map<String, String> paramValueMap = sectionParamValueMap.get(section);
     if (!paramValueMap.containsKey(param)) {
-      throw new RuntimeException("Parameter '" + section + "." + param + "' can't be found.");
+      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
     }
     return Integer.parseInt(paramValueMap.get(param));
   }
-  public long getValueAsLong(String section, String param) {
+  public long getValueAsLong(String section, String param)
+      throws ConfigurationException {
     if (!sectionParamValueMap.containsKey(section)) {
-      throw new RuntimeException("Section '" + section + "' can't be found.");
+      throw new ConfigurationException("Section '" + section + "' can't be found.");
     }
     Map<String, String> paramValueMap = sectionParamValueMap.get(section);
     if (!paramValueMap.containsKey(param)) {
-      throw new RuntimeException("Parameter '" + section + "." + param + "' can't be found.");
+      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
     }
     return Long.parseLong(paramValueMap.get(param));
   }
-  public boolean getValueAsBoolean(String section, String param) {
+  public boolean getValueAsBoolean(String section, String param)
+      throws ConfigurationException {
     if (!sectionParamValueMap.containsKey(section)) {
-      throw new RuntimeException("Section '" + section + "' can't be found.");
+      throw new ConfigurationException("Section '" + section + "' can't be found.");
     }
     Map<String, String> paramValueMap = sectionParamValueMap.get(section);
     if (!paramValueMap.containsKey(param)) {
-      throw new RuntimeException("Parameter '" + section + "." + param + "' can't be found.");
+      throw new ConfigurationException("Parameter '" + section + "." + param + "' can't be found.");
     }
     return Boolean.parseBoolean(paramValueMap.get(param));
   }
-  public List<String> getSectionLines(String sectionName){
-    return sectionLines.get(sectionName);
+  public List<String> getSectionLines(String section)
+      throws ConfigurationException {
+    if (!sectionParamValueMap.containsKey(section)) {
+      throw new ConfigurationException("Section '" + section + "' can't be found.");
+    }
+    return sectionLines.get(section);
   }
   public void parseFile(String filePath)
-      throws FileNotFoundException {
+      throws FileNotFoundException, ConfigurationException {
     openFile(filePath);
     parseFile(filePath);
   }
@@ -79,7 +85,7 @@ public class ConfigManager {
     reader = new BufferedReader(new FileReader(file));
   }
   private void parse()
-      throws SyntaxErrorConfigFile, IOException {
+      throws ConfigurationException, IOException {
     List<String> lines = new ArrayList<>();
     String line;
     String lastSectionName = null;
@@ -94,7 +100,7 @@ public class ConfigManager {
         sections.add(lastSectionName);
       } else {
         if(lastSectionName == null){
-          throw new SyntaxErrorConfigFile("A parameter was found that it has no section.");
+          throw new ConfigurationException("A parameter was found that it has no section.");
         } else {
           if(line.length() != 0 && !line.startsWith("#")) {
             lines.add(line);

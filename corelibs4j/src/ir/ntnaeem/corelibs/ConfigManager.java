@@ -9,7 +9,7 @@ public class ConfigManager {
   private Map<String, List<String>> sectionLines = new Hashtable<>();
   private Map<String, Map<String, String>> sectionParamValueMap = new Hashtable<>();
   private BufferedReader reader;
-  public ConfigManager(String filePath) {
+  public ConfigManager() {
   }
   public boolean hasSection(String section){
     return sections.contains(section);
@@ -49,15 +49,15 @@ public class ConfigManager {
   }
   public List<String> getSectionLines(String section)
       throws ConfigurationException {
-    if (!sectionParamValueMap.containsKey(section)) {
+    if (!sectionLines.containsKey(section)) {
       throw new ConfigurationException("Section '" + section + "' can't be found.");
     }
     return sectionLines.get(section);
   }
   public void parseFile(String filePath)
-      throws FileNotFoundException, ConfigurationException {
+      throws IOException, ConfigurationException {
     openFile(filePath);
-    parseFile(filePath);
+    parse();
   }
   private void openFile(String filePath) throws FileNotFoundException {
     File file = new File(filePath);
@@ -73,7 +73,7 @@ public class ConfigManager {
       if (line.contains("[")) {
         if(lastSectionName != null){
           sectionLines.put(lastSectionName , lines);
-          lines.clear();
+          lines = new ArrayList<>();
         }
         lastSectionName = line.replace("[","").replace("]","").trim();
         sections.add(lastSectionName);

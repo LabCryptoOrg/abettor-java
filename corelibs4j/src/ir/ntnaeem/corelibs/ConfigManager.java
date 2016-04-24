@@ -1,4 +1,4 @@
-package ntnaeem.corelib;
+package ir.ntnaeem.corelibs;
 
 
 import java.io.*;

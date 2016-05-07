@@ -1,4 +1,4 @@
-package ir.ntnaeem.corelibs;
+package org.labcrypto.abettor.conf;
 
 
 public class ConfigurationException extends Exception {

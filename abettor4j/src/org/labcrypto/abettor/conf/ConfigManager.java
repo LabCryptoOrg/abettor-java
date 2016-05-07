@@ -1,8 +1,11 @@
-package ir.ntnaeem.corelibs;
+package org.labcrypto.abettor.conf;
 
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class ConfigManager {
   private List<String> sections = new ArrayList<>();
